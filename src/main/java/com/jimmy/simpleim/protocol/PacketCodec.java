@@ -1,5 +1,9 @@
 package com.jimmy.simpleim.protocol;
 
+import com.jimmy.simpleim.protocol.request.HeartBeatRequestPacket;
+import com.jimmy.simpleim.protocol.request.LoginRequestPacket;
+import com.jimmy.simpleim.protocol.response.HeartBeatResponsePacket;
+import com.jimmy.simpleim.protocol.response.LoginResponsePacket;
 import com.jimmy.simpleim.protocol.serializer.Serializer;
 import com.jimmy.simpleim.protocol.serializer.SerializerAlgorithm;
 import com.jimmy.simpleim.protocol.serializer.impl.JSONSerializer;
@@ -29,7 +33,10 @@ public class PacketCodec {
 
     private PacketCodec() {
         packetMap = new HashMap<>();
-
+        packetMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetMap.put(Command.HEART_BEAT_REQUEST, HeartBeatRequestPacket.class);
+        packetMap.put(Command.HEART_BEAT_RESPONSE, HeartBeatResponsePacket.class);
 
         serializerMap = new HashMap<>();
         serializerMap.put(SerializerAlgorithm.JSON, new JSONSerializer());
@@ -57,7 +64,7 @@ public class PacketCodec {
         int length = byteBuf.readInt();
 
         byte[] bytes = new byte[length];
-        byteBuf.writeBytes(bytes);
+        byteBuf.readBytes(bytes);
 
         Serializer serializer = serializerMap.get(serializerKey);
         Class<? extends Packet> packetClazz = packetMap.get(command);

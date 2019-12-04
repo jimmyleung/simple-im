@@ -1,15 +1,17 @@
-package com.jimmy.simpleim.protocol;
+package com.jimmy.simpleim.hanlder;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 
 import java.util.concurrent.TimeUnit;
 
-public class ImIdleStateHandler extends IdleStateHandler {
-    private static final int READER_IDLE_TIME_SECONDS = 15;
+@ChannelHandler.Sharable
+public class IMIdleStateHandler extends IdleStateHandler {
+    private static final int READER_IDLE_TIME_SECONDS = 60;
 
-    public ImIdleStateHandler() {
+    public IMIdleStateHandler() {
         super(READER_IDLE_TIME_SECONDS, 0, 0, TimeUnit.SECONDS);
     }
 

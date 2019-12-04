@@ -1,8 +1,11 @@
 package com.jimmy.simpleim.server;
 
-import com.jimmy.simpleim.hanlder.ImIdleStateHandler;
+import com.jimmy.simpleim.hanlder.IMIdleStateHandler;
 import com.jimmy.simpleim.protocol.PacketCodecHandler;
 import com.jimmy.simpleim.protocol.Spliter;
+import com.jimmy.simpleim.server.handler.AuthHandler;
+import com.jimmy.simpleim.server.handler.HeartBeatHandler;
+import com.jimmy.simpleim.server.handler.LoginRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,10 +33,12 @@ public class NettyServer {
                         @Override
                         protected void initChannel(NioSocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new ImIdleStateHandler());
+                            pipeline.addLast(new IMIdleStateHandler());
                             pipeline.addLast(new Spliter());
                             pipeline.addLast(new PacketCodecHandler());
-                            pipeline.addLast(new LoggingHandler());
+                            pipeline.addLast(new LoginRequestHandler());
+                            pipeline.addLast(new HeartBeatHandler());
+                            pipeline.addLast(new AuthHandler());
                         }
                     });
             ChannelFuture f = b.bind(PORT).addListener((future) -> {

@@ -5,9 +5,11 @@ import com.jimmy.simpleim.protocol.response.LoginResponsePacket;
 import com.jimmy.simpleim.util.Session;
 import com.jimmy.simpleim.util.SessionUtil;
 import com.jimmy.simpleim.util.UIDUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
 
     @Override
