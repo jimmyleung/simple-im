@@ -22,7 +22,7 @@ public class NettyServer {
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
         try {
-            ServerBootstrap b = new ServerBootstrap();
+            final ServerBootstrap b = new ServerBootstrap();
             b.group(boss, worker)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
@@ -38,7 +38,7 @@ public class NettyServer {
                             pipeline.addLast(new PacketCodecHandler());
                             pipeline.addLast(new LoginRequestHandler());
                             pipeline.addLast(new HeartBeatHandler());
-                            pipeline.addLast(new AuthHandler());
+                            //pipeline.addLast(new AuthHandler());
                         }
                     });
             ChannelFuture f = b.bind(PORT).addListener((future) -> {
@@ -48,10 +48,10 @@ public class NettyServer {
                     System.out.println("端口绑定失败:" + PORT);
                 }
             });
-            f.channel().closeFuture().sync();
+            //f.channel().closeFuture().sync();
         } finally {
-            boss.shutdownGracefully();
-            worker.shutdownGracefully();
+            //boss.shutdownGracefully();
+            //worker.shutdownGracefully();
         }
     }
 

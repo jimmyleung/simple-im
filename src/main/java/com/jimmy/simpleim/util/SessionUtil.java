@@ -15,7 +15,7 @@ public class SessionUtil {
         channel.attr(SessionAttribute.session).set(session);
     }
 
-    public static void unbindSesion(Channel channel) {
+    public static void unbindSession(Channel channel) {
         if (islLogin(channel)) {
             Session session = getSession(channel);
             String userId = session.getUserId();

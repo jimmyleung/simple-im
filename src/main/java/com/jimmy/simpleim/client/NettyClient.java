@@ -2,12 +2,14 @@ package com.jimmy.simpleim.client;
 
 import com.jimmy.simpleim.client.console.ConsoleCommandManager;
 import com.jimmy.simpleim.client.console.LoginCommand;
+import com.jimmy.simpleim.client.handler.HeartBeatResponseHandler;
 import com.jimmy.simpleim.client.handler.HeartBeatTimer;
 import com.jimmy.simpleim.client.handler.LoginResponseHandler;
 import com.jimmy.simpleim.hanlder.IMIdleStateHandler;
 import com.jimmy.simpleim.protocol.Spliter;
 import com.jimmy.simpleim.protocol.PacketDecoder;
 import com.jimmy.simpleim.protocol.PacketEncoder;
+import com.jimmy.simpleim.server.handler.HeartBeatHandler;
 import com.jimmy.simpleim.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -36,6 +38,7 @@ public class NettyClient {
                         pipeline.addLast(new Spliter());
                         pipeline.addLast(new PacketDecoder());
                         pipeline.addLast(new LoginResponseHandler());
+                        pipeline.addLast(new HeartBeatResponseHandler());
 
 
 
@@ -60,10 +63,12 @@ public class NettyClient {
         LoginCommand loginCommand = new LoginCommand();
         Scanner scanner = new Scanner(System.in);
         new Thread(() ->{
-            if (SessionUtil.islLogin(channel)) {
-                consoleCommandManager.exec(scanner, channel);
-            } else {
-                loginCommand.exec(scanner, channel);
+            while (!Thread.interrupted()) {
+                if (SessionUtil.islLogin(channel)) {
+                    consoleCommandManager.exec(scanner, channel);
+                } else {
+                    loginCommand.exec(scanner, channel);
+                }
             }
         }).start();
     }
